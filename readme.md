@@ -1,6 +1,4 @@
 
-
-
 ## Vector type for SQL Server < 2025
 
 ### Requirements
@@ -19,3 +17,4 @@
 
 - use local embeddings
 
+NOTE. Use at your own risk.
