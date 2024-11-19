@@ -59,12 +59,12 @@ This repository contains example code for demonstrating REST API integration and
    - Use the `InvokeRestEndpoint` stored procedure to call REST APIs directly from SQL Server.
    - Example SQL query:
      ```sql
-     EXEC dbo.InvokeRestEndpoint 
-       @url = 'https://api.example.com/data',
-       @method = 'GET',
-       @payload = NULL,
-       @headersJson = '{"Authorization":"Bearer token"}',
-       @response OUTPUT;
+   EXEC dbo.sp_invoke_external_rest_endpoint2
+       @url = @url,
+       @method = 'POST',   
+       @payload = @payload,   
+       @headers = '{"Content-Type":"application/json", "api-key":"zzzzzz"}',
+       @response = @response OUTPUT;
      ```
 
 2. **Vector Calculations**:
