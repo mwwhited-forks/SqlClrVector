@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net4.8</TargetFramework>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Reference to the library for working with SQL CLR -->
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <!-- Reference to System.Net.Http for making HTTP calls -->
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+
+</Project>
