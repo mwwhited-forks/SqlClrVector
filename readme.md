@@ -1,7 +1,7 @@
 
 
 
-## Vector type for SQL Server 2020
+## Vector type for SQL Server < 2025
 
 ### Requirements
 - vs.code
