@@ -32,9 +32,11 @@ This repository contains example code for demonstrating REST API integration and
   - SQL CLR UDT for vector operations.
   - Supports parsing from JSON-like strings and performing vector distance calculations.
   - Implements serialization for SQL Server compatibility.
+  - Assesmbly deployed in SAFE mode.
 
 - **`myVector.csproj`**:
   - Project file for compiling the vector operations code.
+  - Assesmbly deployed in EXTERNAL_ACCESS mode.
 
 - **`myVector.sln`**:
   - Solution file to manage both the REST API and vector projects in Visual Studio.
@@ -44,6 +46,7 @@ This repository contains example code for demonstrating REST API integration and
 - Visual Studio 2022 (or newer).
 - .NET Framework 4.8.
 - SQL Server 2020 or newer with CLR integration enabled.
+- The UDF needs EXTERNAL_ACCESS. SQL CLR in linux supports only SAFE assemblies [link](https://learn.microsoft.com/en-us/sql/language-extensions/concepts/compare-extensibility-to-clr?view=sql-server-ver16).
 
 ## Limitations
 - Vector type:
@@ -58,24 +61,24 @@ This repository contains example code for demonstrating REST API integration and
    - Deploy the `myRestEndpoint` assembly to your SQL Server.
    - Use the `InvokeRestEndpoint` stored procedure to call REST APIs directly from SQL Server.
    - Example SQL query:
-     ```sql
-   EXEC dbo.sp_invoke_external_rest_endpoint2
-       @url = @url,
-       @method = 'POST',   
-       @payload = @payload,   
-       @headers = '{"Content-Type":"application/json", "api-key":"zzzzzz"}',
-       @response = @response OUTPUT;
-     ```
+```sql
+EXEC dbo.sp_invoke_external_rest_endpoint2
+@url = @url,
+@method = 'POST',   
+@payload = @payload,   
+@headers = '{"Content-Type":"application/json", "api-key":"zzzzzz"}',
+@response = @response OUTPUT;
+```
 
 2. **Vector Calculations**:
    - Deploy the `Vector` UDT to your SQL Server.
    - Use the `VECTOR_DISTANCE` function to calculate distances between vectors.
    - Example SQL query:
-     ```sql
-     DECLARE @v1 Vector = '[1.0, 2.0, 3.0]';
-     DECLARE @v2 Vector = '[4.0, 5.0, 6.0]';
-     SELECT dbo.VectorDistance('euclidean', @v1, @v2) AS Distance;
-     ```
+```sql
+DECLARE @v1 Vector = '[1.0, 2.0, 3.0]';
+DECLARE @v2 Vector = '[4.0, 5.0, 6.0]';
+SELECT dbo.VectorDistance('euclidean', @v1, @v2) AS Distance;
+```
 
 ## Pending Work
 - Add support for local embeddings in vector calculations.
