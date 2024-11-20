@@ -40,10 +40,10 @@ public class Vector : INullable, IBinarySerialize
         {
             if (inputValue.StartsWith("[") && inputValue.EndsWith("]"))
             {
-                // Remover corchetes inicial y final
+                // Remove initial and final brackets
                 string trimmedInput = inputValue.Substring(1, inputValue.Length - 2);
 
-                // Dividir los elementos por comas y convertirlos a double
+                // Split elements by commas and convert them to double
                 vector._values = trimmedInput
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(v => double.Parse(v, CultureInfo.InvariantCulture))
@@ -72,15 +72,15 @@ public class Vector : INullable, IBinarySerialize
         if (_values == null || _values.Length == 0)
             return "[]";
 
-        // Formatea los valores y únelos en una sola línea
+        // Format values and join them in a single line
         var formattedValues = _values
-            .Select(v => v.ToString("e7", CultureInfo.InvariantCulture)) // Siempre usa '.' como separador
+            .Select(v => v.ToString("e7", CultureInfo.InvariantCulture)) // Always use '.' as separator
             .ToArray();
 
         return "[" + string.Join(",", formattedValues) + "]";
     }
 
-    // Métodos para la serialización binaria (IBinarySerialize)
+    // Methods for binary serialization (IBinarySerialize)
     public void Read(System.IO.BinaryReader reader)
     {
         int length = reader.ReadInt32();
@@ -100,7 +100,7 @@ public class Vector : INullable, IBinarySerialize
         }
     }
 
-    // Función para calcular distancia entre dos vectores
+    // Function to calculate distance between two vectors
     public static double VectorDistance(string distanceMetric, Vector vector1, Vector vector2)
     {
         if (vector1 == null || vector2 == null || vector1._values.Length != vector2._values.Length)
@@ -125,7 +125,7 @@ public class Vector : INullable, IBinarySerialize
         }
     }
 
-    // Métodos de distancia y operaciones entre vectores...
+    // Distance methods and operations between vectors...
     private static double CosineDistance(double[] v1, double[] v2)
     {
         double dot = DotProduct(v1, v2);

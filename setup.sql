@@ -109,10 +109,8 @@ EXEC dbo.sp_invoke_external_rest_endpoint2
 ---- difference: SQL Azure sp_invoke_external_rest_endpoint returns: '$.result.data[0].embedding'
 -- DECLARE @json NVARCHAR(MAX) = JSON_QUERY(@response, '$.result.data[0].embedding');
 
+-- convert result to Vector
 SELECT @vector = STRING_AGG(value, ',')
 FROM OPENJSON(@response, '$.data[0].embedding');
 
--- convert to Vector
 SELECT @vector, cast(@vector as nvarchar(max)), @response;
-
-

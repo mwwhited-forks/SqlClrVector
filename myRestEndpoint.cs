@@ -8,32 +8,37 @@ using Microsoft.SqlServer.Server;
 public class RestEndpoint
 {
     [SqlProcedure]
-    public static void InvokeRestEndpoint(SqlString url, SqlString method, SqlString payload, SqlString headersJson, out SqlString response)
+    public static void InvokeRestEndpoint(
+        SqlString url, 
+        SqlString method, 
+        SqlString payload, 
+        SqlString headersJson, 
+        out SqlString response)
     {
-        response = new SqlString("Unknown error occurred."); // Valor inicial para el parámetro de salida
+        response = new SqlString("Unknown error occurred."); // Initial value for the output parameter
 
         try
         {
-            // Forzar el uso de TLS 1.2
+            // Force the use of TLS 1.2
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            // (Opcional) Deshabilitar la validación de certificados (solo para pruebas)
+            // (Optional) Disable certificate validation (for testing only)
             // System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
-            // Crear la solicitud HTTP
+            // Create the HTTP request
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url.Value);
             request.Method = method.Value.ToUpper();
 
-            // Procesar encabezados desde JSON
+            // Process headers from JSON
             if (!headersJson.IsNull && !string.IsNullOrWhiteSpace(headersJson.Value))
             {
-                // Remover las llaves iniciales y finales
+                // Remove the initial and final braces
                 string trimmedHeaders = headersJson.Value.Trim('{', '}');
                 string[] headerPairs = trimmedHeaders.Split(',');
 
                 foreach (string pair in headerPairs)
                 {
-                    string[] keyValue = pair.Split(new char[] { ':' }, 2); // Dividir solo en el primer ':'
+                    string[] keyValue = pair.Split(new char[] { ':' }, 2); // Split only at the first ':'
                     if (keyValue.Length == 2)
                     {
                         string key = keyValue[0].Trim().Trim('"');
@@ -41,19 +46,19 @@ public class RestEndpoint
 
                         if (key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
                         {
-                            // Asignar Content-Type al encabezado de contenido
+                            // Assign Content-Type to the content header
                             request.ContentType = value;
                         }
                         else
                         {
-                            // Agregar otros encabezados a la solicitud
+                            // Add other headers to the request
                             request.Headers.Add(key, value);
                         }
                     }
                 }
             }
 
-            // Configurar el payload para solicitudes POST
+            // Set up the payload for POST requests
             if (method.Value.Equals("POST", StringComparison.OrdinalIgnoreCase) && !payload.IsNull)
             {
                 byte[] byteArray = Encoding.UTF8.GetBytes(payload.Value);
@@ -65,7 +70,7 @@ public class RestEndpoint
                 }
             }
 
-            // Obtener la respuesta
+            // Get the response
             using (HttpWebResponse webResponse = (HttpWebResponse)request.GetResponse())
             {
                 using (Stream dataStream = webResponse.GetResponseStream())
