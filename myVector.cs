@@ -16,6 +16,11 @@ public class Vector : INullable, IBinarySerialize
         _values = Array.Empty<double>();
     }
 
+    public int Size()
+    {
+        return _values.Length;
+    }
+    
     public bool IsNull { get; private set; }
 
     public static Vector Null
