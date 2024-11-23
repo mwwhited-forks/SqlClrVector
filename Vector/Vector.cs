@@ -50,7 +50,7 @@ public class Vector : INullable, IBinarySerialize
                 .Select(v => double.Parse(v, CultureInfo.InvariantCulture))
                 .ToArray();
 
-            vector._magnitude = DotProduct(ref vector._values, ref vector._values);
+            vector._magnitude = Math.Sqrt(DotProduct(ref vector._values, ref vector._values));
         }
         catch (FormatException)
         {
@@ -87,7 +87,7 @@ public class Vector : INullable, IBinarySerialize
         var peeked = reader.PeekChar();
         if (peeked == -1)
         {
-            _magnitude = DotProduct(ref _values, ref _values);
+            _magnitude = Math.Sqrt(DotProduct(ref _values, ref _values));
         }
         else
         {
