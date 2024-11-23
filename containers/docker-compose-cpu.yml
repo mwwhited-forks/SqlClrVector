@@ -1,0 +1,17 @@
+services:
+
+  sql-server:
+    extends:
+      file: docker-compose.sql-server.yml
+      service: sql-server
+    networks:
+      - backend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+    sqlserver-data:

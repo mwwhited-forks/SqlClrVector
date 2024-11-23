@@ -1,0 +1,13 @@
+name: sql-server
+services:
+    sql-server:
+        build:
+          dockerfile: .\containers\DockerFile.sql-server
+          context: ..
+        ports:
+        - 1433:1433
+        environment:
+        - ACCEPT_EULA=Y
+        - MSSQL_SA_PASSWORD=P@ssw0rd
+        volumes:
+        - sqlserver-data:/var/opt/mssql

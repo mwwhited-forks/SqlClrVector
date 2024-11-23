@@ -3,9 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "myRestEndpoint", "myRestEndpoint.csproj", "{560F8FC2-EBFD-4949-ACCA-6AD2152C5D92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "myRestEndpoint", "RestEndpoint\myRestEndpoint.csproj", "{560F8FC2-EBFD-4949-ACCA-6AD2152C5D92}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "myVector", "myVector.csproj", "{D066FDFD-F785-449C-A14C-7E7C115719C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "myVector", "Vector\myVector.csproj", "{D066FDFD-F785-449C-A14C-7E7C115719C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52F78831-8D23-4AFB-BA8C-14B1A0DCA045}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		players_positions.sql = players_positions.sql
+		readme.md = readme.md
+		setup-linux.sql = setup-linux.sql
+		setup.sql = setup.sql
+		trivia-tests.sql = trivia-tests.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
