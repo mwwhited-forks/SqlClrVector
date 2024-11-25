@@ -84,14 +84,13 @@ public class Vector : INullable, IBinarySerialize
             _values[i] = reader.ReadDouble();
         }
 
-        var peeked = reader.PeekChar();
-        if (peeked == -1)
+        if (reader.BaseStream.Position < reader.BaseStream.Length)
         {
-            _magnitude = Math.Sqrt(DotProduct(ref _values, ref _values));
+            _magnitude = reader.ReadDouble();
         }
         else
         {
-            _magnitude = reader.ReadDouble();
+            _magnitude = Math.Sqrt(DotProduct(ref _values, ref _values));
         }
     }
 
