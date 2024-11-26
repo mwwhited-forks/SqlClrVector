@@ -1,16 +1,22 @@
 /*
+  This script performs the following operations:
 
--- This script performs the following operations:
+  1. Drops the table `player_positions` if it exists.
+  2. Creates a new table `player_positions` with columns:
+     - `id`: Primary key with auto-increment.
+     - `player_name`: NVARCHAR(100) to store the player's name.
+     - `position`: VECTOR to store the player's position.
+     - `filler`: CHAR(100) with a default value of 'filler'.
+  3. Inserts sample data into the `player_positions` table.
+  4. Selects all columns from `player_positions` and casts the `position` column to VARCHAR(MAX).
+  5. Declares a variable `@morata_position` with Morata's position and calculates the distance between Morata and selected players using Euclidean, Cosine, Dot Product, and Manhattan similarity measures.
+  6. Enables the execution plan display with `SET SHOWPLAN_TEXT ON`.
+  7. Creates a Common Table Expression (CTE) `morata` to select Morata's position and compares it with selected players using the same similarity measures.
+  8. Creates a non-clustered index `nci_player_position` on `player_name` and includes the `position` column.
+  9. Repeats the CTE query to compare Morata's position with selected players, utilizing the newly created index.
+  10. Disables the execution plan display with `SET SHOWPLAN_TEXT OFF`.
 
-1. Drops the table `player_positions` if it exists.
-2. Creates a new table `player_positions` with columns `player_name` and `position`.
-  - `player_name` is of type NVARCHAR(100) and cannot be NULL.
-  - `position` is of type VECTOR and cannot be NULL.
-3. Inserts predefined player names and their corresponding positions into the `player_positions` table.
-4. Selects all columns from the `player_positions` table and casts the `position` column to VARCHAR(MAX) for display purposes.
-5. Calculates the distance between Morata's position and the positions of selected players (`Lamine Yamal`, `Morata`, `Rodri`, `Dani Carvajal`) using Euclidean, Cosine, and Dot Product similarity measures.
-  - The results are ordered by the Cosine similarity measure.
-6. Calculates the distance between Morata's position and the positions of selected players (`Lamine Yamal`, `Morata`, `Rodri`, `Dani Carvajal`) using Euclidean, Cosine, Dot Product, and Manhattan similarity measures.
+  The script includes comments and execution plans to analyze the performance of the queries.
 */
 
 DROP TABLE IF EXISTS player_positions;

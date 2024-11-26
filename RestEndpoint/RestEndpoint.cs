@@ -9,10 +9,10 @@ public class RestEndpoint
 {
     [SqlProcedure]
     public static void InvokeRestEndpoint(
-        SqlString url, 
-        SqlString method, 
-        SqlString payload, 
-        SqlString headersJson, 
+        SqlString url,
+        SqlString method,
+        SqlString payload,
+        SqlString headersJson,
         out SqlString response)
     {
         response = new SqlString("Unknown error occurred."); // Initial value for the output parameter
@@ -71,16 +71,12 @@ public class RestEndpoint
             }
 
             // Get the response
-            using (HttpWebResponse webResponse = (HttpWebResponse)request.GetResponse())
+            using (var webResponse = (HttpWebResponse)request.GetResponse())
+            using (var dataStream = webResponse.GetResponseStream())
+            using (var reader = new StreamReader(dataStream))
             {
-                using (Stream dataStream = webResponse.GetResponseStream())
-                {
-                    using (StreamReader reader = new StreamReader(dataStream))
-                    {
-                        string responseFromServer = reader.ReadToEnd();
-                        response = new SqlString(responseFromServer);
-                    }
-                }
+                string responseFromServer = reader.ReadToEnd();
+                response = new SqlString(responseFromServer);
             }
         }
         catch (WebException webEx)
@@ -88,12 +84,71 @@ public class RestEndpoint
             if (webEx.Response != null)
             {
                 using (var errorResponse = (HttpWebResponse)webEx.Response)
+                using (var reader = new StreamReader(errorResponse.GetResponseStream()))
                 {
-                    using (var reader = new StreamReader(errorResponse.GetResponseStream()))
-                    {
-                        string errorText = reader.ReadToEnd();
-                        response = new SqlString($"HTTP Error: {errorResponse.StatusCode} - {errorResponse.StatusDescription} - {errorText}");
-                    }
+                    string errorText = reader.ReadToEnd();
+                    response = new SqlString($"HTTP Error: {errorResponse.StatusCode} - {errorResponse.StatusDescription} - {errorText}");
+                }
+            }
+            else
+            {
+                response = new SqlString($"WebException: {webEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            response = new SqlString($"Exception: {ex.GetType().Name} - {ex.Message} - {ex.StackTrace}");
+        }
+    }
+
+    [SqlProcedure]
+    public static void InvokeOllamaModel(
+        SqlString endpoint,
+        SqlString model,
+        SqlString prompt,
+        out SqlString response)
+    {
+        response = new SqlString("Unknown error occurred."); // Valor inicial del parámetro de salida
+
+        try
+        {
+            // Forzar el uso de TLS 1.2
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            // Crear el payload
+            string payload = $"{{\"model\": \"{model.Value}\", \"prompt\": \"{prompt.Value}\"}}";
+
+            // Crear la solicitud HTTP
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint.Value);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+
+            byte[] byteArray = Encoding.UTF8.GetBytes(payload);
+            request.ContentLength = byteArray.Length;
+
+            using (Stream dataStream = request.GetRequestStream())
+            {
+                dataStream.Write(byteArray, 0, byteArray.Length);
+            }
+
+            // Obtener la respuesta
+            using (var webResponse = (HttpWebResponse)request.GetResponse())
+            using (var dataStream = webResponse.GetResponseStream())
+            using (StreamReader reader = new StreamReader(dataStream))
+            {
+                string responseFromServer = reader.ReadToEnd();
+                response = new SqlString(responseFromServer);
+            }
+        }
+        catch (WebException webEx)
+        {
+            if (webEx.Response != null)
+            {
+                using (var errorResponse = (HttpWebResponse)webEx.Response)
+                using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                {
+                    string errorText = reader.ReadToEnd();
+                    response = new SqlString($"HTTP Error: {errorResponse.StatusCode} - {errorResponse.StatusDescription} - {errorText}");
                 }
             }
             else

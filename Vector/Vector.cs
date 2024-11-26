@@ -19,14 +19,10 @@ public class Vector : INullable, IBinarySerialize
 
     public bool IsNull { get; private set; }
 
-    public static Vector Null
-    {
-        get
-        {
-            var vector = new Vector { IsNull = true };
-            return vector;
-        }
-    }
+    public int Size => _values.Length;
+    public double Magnitude => _magnitude;
+
+    public static Vector Null =>  new Vector { IsNull = true };
 
     // Parse from a comma-delimited string or a simple JSON-like format
     public static Vector Parse(SqlString input)
@@ -145,7 +141,7 @@ public class Vector : INullable, IBinarySerialize
             case "euclidean":
                 return EuclideanDistance(ref vector1._values, ref vector2._values);
             case "dot":
-                return -DotProduct(ref vector1._values, ref vector2._values);
+                return DotProduct(ref vector1._values, ref vector2._values);
             case "manhattan":
                 return ManhattanDistance(ref vector1._values, ref vector2._values);
             default:
